@@ -1,0 +1,60 @@
+<div id="app">
+    <h2>{{products}}are in stock.</h2>
+</div>
+<script src="https://unpkg.com/vue"></script>
+<form enctype='multipart/form-data'>
+      <h1>
+        Upload files
+      </h1>
+      <input type='file' name='photo' @change="filesChange($event.target.name, $event.target.files)">
+</form>
+<script>
+    import axios from 'axios'
+    export default {
+      name: 'App',
+      data () {
+        return {
+          serverLink: 'http://localhost:3000/upload/'
+        }
+      },
+      methods: {
+        filesChange (filename, files) {
+          if (!files.length) {
+            return
+          }
+    
+          console.log(filename, files)
+          const formData = new FormData()
+          for (let i = 0; i < files.length; i++) {
+            formData.append(filename, files[i], files[i].name)
+          }
+    
+          axios.post(this.serverLink, formData).then(
+            rsp => {
+              console.log(rsp)
+            }
+          ).catch(err => {
+            console.log(err)
+          })
+        }
+      }
+    }
+    </script>
+
+<script>
+    const app = new Vue({
+        el:'#app',
+        data:{
+            products:[]
+        },
+        created(){
+            fetch("https://api.myjson.com/bins/74l63")
+            .then(reponse => {
+                response.json()
+            })
+            .then(json => {this.products = json.products})
+        }
+    })
+
+    app.mount("#app")
+</script>
